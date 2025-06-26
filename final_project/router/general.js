@@ -36,38 +36,78 @@ public_users.get('/', async function (req, res) {
   }
 });
 
+async function getBookByISBN(isbn) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (books[isbn]) {
+        resolve(books[isbn]);
+      } else {
+        reject(new Error("Book not found"));
+      }
+    }, 1000); // Simulating a delay of 1 second
+  });
+}
+
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn', function (req, res) {
+public_users.get('/isbn/:isbn', async function (req, res) {
   //Write your code here
-  const isbn = req.params.isbn;
-  if (books[isbn]) {
-    return res.status(200).json(books[isbn]);
+  try {
+    const isbn = req.params.isbn;
+    const book = await getBookByISBN(isbn);
+    return res.status(200).json(book);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
   }
-  return res.status(404).json({ message: "Book not found" });
 });
+
+async function getBooksByAuthor(author) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const booksByAuthor = Object.values(books).filter(book => book.author === author);
+      if (booksByAuthor.length > 0) {
+        resolve(booksByAuthor);
+      } else {
+        reject(new Error("No books found for this author"));
+      }
+    }, 1000); // Simulating a delay of 1 second
+  });
+}
 
 // Get book details based on author
-public_users.get('/author/:author', function (req, res) {
+public_users.get('/author/:author', async function (req, res) {
   //Write your code here
   const author = req.params.author;
-  for (const i in books) {
-    if (books[i].author === author) {
-      return res.status(200).json(books[i]);
-    }
+  try {
+    const booksByAuthor = await getBooksByAuthor(author);
+    return res.status(200).json(booksByAuthor);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
   }
-  return res.status(404).json({ message: "Author not found" });
 });
 
+async function getBookByTitle(title) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const book = Object.values(books).find(book => book.title === title);
+      if (book) {
+        resolve(book);
+      } else {
+        reject(new Error("Book not found"));
+      }
+    }, 1000); // Simulating a delay of 1 second
+  });
+}
+
 // Get all books based on title
-public_users.get('/title/:title', function (req, res) {
+public_users.get('/title/:title', async function (req, res) {
   //Write your code here
   const title = req.params.title;
-  for (const i in books) {
-    if (books[i].title === title) {
-      return res.status(200).json(books[i]);
-    }
+  try {
+    const book = await getBookByTitle(author);
+    return res.status(200).json(book);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
   }
-  return res.status(404).json({ message: "Title not found" });
 });
 
 //  Get book review
