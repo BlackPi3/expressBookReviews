@@ -16,10 +16,24 @@ public_users.post("/register", (req, res) => {
   }
 });
 
+async function getBooks() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(books);
+    }, 1000); // Simulating a delay of 1 second
+  });
+
+}
+
 // Get the book list available in the shop
-public_users.get('/', function (req, res) {
+public_users.get('/', async function (req, res) {
   //Write your code here
-  res.send(JSON.stringify(books, null, 4));
+  try {
+    const booksList = await getBooks();
+    return res.status(200).json(JSON.stringify(booksList, null, 4));
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 // Get book details based on ISBN
