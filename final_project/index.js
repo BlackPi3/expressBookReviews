@@ -16,9 +16,9 @@ app.use("/customer/auth/*", function auth(req, res, next) {
     if (req.session.authorization) {
         let token = req.session.authorization['accessToken'];
 
-        jwt.verify(token, JWT_SECRET, (err, user) => {
+        jwt.verify(token, JWT_SECRET, (err, payload) => {
             if (!err) {
-                req.user = user;
+                req.username = payload.username; // Attach the username to the request object
                 next(); // Proceed to the next middleware
             } else {
                 return res.status(403).json({ message: "User not authenticated" });

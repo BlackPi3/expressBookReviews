@@ -60,7 +60,7 @@ public_users.get('/title/:title', function (req, res) {
 public_users.get('/review/:isbn', function (req, res) {
   //Write your code here
   const isbn = req.params.isbn;
-  if (books[isbn] && books[isbn].reviews.length > 0) {
+  if (books[isbn] && Object.keys(books[isbn].reviews).length > 0) {
     return res.status(200).json(books[isbn].reviews);
   }
   return res.status(404).json({ message: "Reviews not found for this book" });
