@@ -103,7 +103,7 @@ public_users.get('/title/:title', async function (req, res) {
   //Write your code here
   const title = req.params.title;
   try {
-    const book = await getBookByTitle(author);
+    const book = await getBookByTitle(title);
     return res.status(200).json(book);
   } catch (error) {
     return res.status(404).json({ message: error.message });
